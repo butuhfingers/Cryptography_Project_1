@@ -7,12 +7,20 @@
  */
 require_once ("Encryption.php");
 require_once ("SubstitutionCipher.php");
+require_once ("DuplicationPattern.php");
 
 use Encryption\Encryption;
 use Cryptography\SubstitutionCipher;
+use Cryptography\DuplicationPattern;
 
 function FormatLongText(string $message, int $increment) : string{
-	//Implement
+	$length = strlen($message);
+	
+	for($i = 1;$i < ceil($length / $increment);$i++){
+		$message = substr_replace($message, '<br>', ($i * $increment), 0);
+	}
+	
+	return $message;
 }
 
 //Problem 1 of project 1
@@ -31,12 +39,14 @@ $message = "JGKYYBGQRGAMELMKSQGLSBDGKEKSEJGLYWESCGJQWEIIEGJIBAQGKDCBWGRMUGKGKLEB
 			MJTLCNQEZBDOYSCBCMQSELTISTQERSRMUBKAIGKDSCBRCQTOCBQBMUSBKGSSGEKRSCBCBEACSMUUEUSBBKMQSWBK
 			SYUBBSGKDUMQJRGKGIJMRSEJNBKBSQGOIBLMNNELBOTQSCBKEKASCBGEQWESCESRUQGAQGKLB";
 //The key
+print("Problem 1 <br><br>");
 $key = "GOLDBUG";
 $encryption = new Encryption($message, $key);
 $cipher = new SubstitutionCipher($encryption);
 //print_r($cipher->GetFrequencies());
 $cipher->DecodeWithKey();
-print($cipher->GetEncryption()->GetMessage());
+print(FormatLongText($cipher->GetEncryption()->GetMessage(), 100));
+print("<br><br><br>");
 //print SubstitutionCipher::DecryptWithKnownKey($message, $key);
 
 //The answer to problem 1
@@ -70,8 +80,13 @@ HSOUDNOPTJAPCDNAEDLCSNONSITDJQJRNKGSJASOLDPSRSDJBTPPTEGSADJSTNJSOPRYOKISKUPCSWKN
 DTIUNDSAITJSVSJDJEHQASAPCSIDJPCSPNTDJDJBLNKBNTIUKNJSWNSENQDPOTPPCSQOODBJTHODJPSHHDBSJESOSNVDESTLNSEQNOKNPK
 PCSJTPDKJTHOSEQNDPYTBSJEYRSETQOSKUPCDOITJYRSHDSVSPCTPPCSPNSTOQNSDOTCKTXTJAPCTPPCKITORSTHSITYCTVSJSVSNSVSJSXDOPSA";
 
-//print SubstitutionCipher::DecryptWithKnownCrib(str_replace("\n", '', $message), $crib);
+print("Problem 2 <br><br>");
+$encryption = new Encryption($message, $key);
+$cipher = new SubstitutionCipher($encryption);
+$patterns = new DuplicationPattern($crib);
+$cipher->DecodeWithCrib($crib);
 
+print("<br><br><br>");
 /* the answer
 
 DHONOSMMRGOLIDNBDGYFNROUINOSLFNOKNDIOWIOUYBSWRKCONRLWOHIONOUSNDFHUICOSUXOHIFNOLDGSPSHHSPOUICDPSLY
